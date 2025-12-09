@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Запуск проекта
 
 Бэкенд
@@ -9,3 +10,6 @@ npm run dev
 cd web
 npm install
 npm run dev
+=======
+"# la-track-project" 
+>>>>>>> fe1fee5 (первый коммит)
