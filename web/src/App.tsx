@@ -7,8 +7,9 @@ import CoordinatorPage from './pages/CoordinatorPage';
 import InformerPage from './pages/InformerPage';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
+import Register from './pages/Register'; // ← добавлен импорт
 
-// Используем глобальный api из services/api.ts (лучше так, чем дублировать axios.create)
+// Используем глобальный api из services/api.ts
 import api from './services/api';
 
 // Тип пользователя
@@ -42,16 +43,17 @@ const GuestRoute: React.FC<{
   isAuthenticated: boolean;
 }> = ({ children, isAuthenticated }) => {
   if (isAuthenticated) {
-    // Редирект на соответствующую домашнюю страницу на основе роли
-    return userRoleMap[localStorage.getItem('role') || ''] || <Navigate to="/login" replace />;
+    // Используем userRoleMap внутри компонента (вне JSX!)
+    const role = localStorage.getItem('role');
+    if (role === 'coordinator') {
+      return <Navigate to="/coordinator" replace />;
+    }
+    if (role === 'informer') {
+      return <Navigate to="/informer" replace />;
+    }
+    return <Navigate to="/login" replace />;
   }
   return <>{children}</>;
-};
-
-// Вспомогательный маппинг ролей → маршрутов (для безопасного редиректа)
-const userRoleMap: Record<string, JSX.Element> = {
-  coordinator: <Navigate to="/coordinator" replace />,
-  informer: <Navigate to="/informer" replace />,
 };
 
 const AppContent: React.FC = () => {
@@ -89,7 +91,6 @@ const AppContent: React.FC = () => {
     validateToken();
   }, []);
 
-  // ✅ ЕДИНСТВЕННЫЙ handleLogin — внутри AppContent
   const handleLogin = async (token: string) => {
     localStorage.setItem('token', token);
     try {
@@ -123,6 +124,14 @@ const AppContent: React.FC = () => {
           element={
             <GuestRoute isAuthenticated={isAuthenticated}>
               <Login onLogin={handleLogin} />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <GuestRoute isAuthenticated={isAuthenticated}>
+              <Register onRegister={handleLogin} />
             </GuestRoute>
           }
         />
