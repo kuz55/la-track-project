@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",        // ← ИЗМЕНЕНО С "node" НА "bundler"
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
